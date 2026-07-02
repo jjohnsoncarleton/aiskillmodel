@@ -27,7 +27,7 @@ import matplotlib.pyplot as plt
 from scipy.integrate import solve_ivp
 # timer
 #import time
-
+import cmath
 # Parameters
 
 
@@ -64,16 +64,17 @@ sp = smax/2
 
 
 # Motivation Array
-Ms = np.array([Pmax/2, Pmax/2])
-sais = np.array([sp/2,3*sp/2])
-#wss = [wd/2, 3*wd/2]
+#Ms = np.array([Pmax/2, Pmax/2])
+M = Pmax/2
+sais = np.array([2*sp/3,3*sp/2])
+wss = [wd/4, 5*wd/4]
 
 M =1
 
 
 
 # skill of ai array
-sai = smax/4
+sai = 2*sp/3
 
 
 # FP 1
@@ -83,7 +84,7 @@ if w0 > wd:
 s0 = 0
 P0 = M
 y0 = [w0, s0, P0]
-y0 = y0 +np.array([np.random.uniform(0,0.3)-0.15, np.random.uniform(0,0.3),np.random.uniform(0,0.3)-0.15])
+y0 = y0 +np.array([np.random.uniform(0,0.1), np.random.uniform(0,0.1),np.random.uniform(0,0.1)])
 
 # function for ODE
 def fun(t,y):
@@ -96,19 +97,27 @@ def fun(t,y):
 tspan = [0,1000]
 
 
-fig, axs = plt.subplots(len(Ms), len(sais))
-for i in range(len(Ms)):
-    M =Ms[i]
-    w0 = wd*(1-sp/sai)
-    if w0 > wd or w0 < 0:
-        print("Impossible Initial Condition")
-    s0 = 0
-    P0 = M
-    y0 = [w0, s0, P0]
-    y0 = y0 +np.array([np.random.uniform(0,0.3)-0.15, np.random.uniform(0,0.3),np.random.uniform(0,0.3)-0.15])
-
+fig, axs = plt.subplots(len(wss), len(sais))
+for i in range(len(wss)):
+    ws =wss[i]
     for j in range(len(sais)):
         sai= sais[j]
+        #print( -(wd*sp-(wd-ws)*sai)*smax/sai*b)
+        print(a*g*M*(M-Pmax)*(sai-sp)*sp/sai)
+        print(cmath.sqrt(a*g*M*(M-Pmax)*(sai-sp)*sp/sai))
+        print(-1j*cmath.sqrt(a*g*M*(M-Pmax)*(sai-sp)*sp/sai))
+        w0 = wd*(1-sp/sai)
+        #if w0 > wd or w0 < 0:
+         #   print("Impossible Initial Condition")
+         #   print(w0)
+        s0 = 0
+        P0 = M
+        y0 = [w0, s0, P0]
+        #y0 = y0 +2*np.array([np.random.uniform(0,0.01), np.random.uniform(0,0.01),np.random.uniform(0,0.01)])
+        #y0 = y0 +2*np.array([np.random.uniform(0,0.01), np.random.uniform(0,0.01),0])
+        #y0 = y0 +2*np.array([0, np.random.uniform(0,0.01),0])
+        y0 = y0 +30*np.array([np.random.uniform(0,0.01), 0,np.random.uniform(0,0.01)])
+        #y0 = y0 +2*np.array([0,np.random.uniform(0,0.01), np.random.uniform(0,0.01)])
         sol = solve_ivp(fun, tspan, y0, method = 'RK45',atol=1e-10,rtol=1e-8) 
         [w,s,P] = sol.y
         t1 = sol.t
