@@ -41,35 +41,29 @@ from scipy.integrate import solve_ivp
 
 
 # amount of work needed to improve skill
-ws = 2
+ws = 0.5
 
 
-# time scale for w
-a = 0.01
+
 # time scale for s
-b = 0.01
+b = 1
 # time scale for P 
-g = 0.01
-
-
-
-#sai = 1.3*smax
+g = 1
 
 
 
 # productivity skill threshold
-#sp = smax/3
+
 sp = 1/2
-#sp = 1.2*smax
+
 
 
 
 # Motivation Array
-Ms = np.array([-0.25,0.25])
-sais = np.array([1/4,3/4])
-
-
-M =1
+#Ms = np.array([-0.25,0, 0.25])
+#sais = np.array([sp/2,sp,3*sp/2])
+Ms = np.array([-0.25, 0.25])
+sais = np.array([sp/2,3*sp/2])
 
 
 
@@ -93,9 +87,9 @@ def fun(t,y):
 
 
 
-tspan = [0,10000]
+tspan = [0,1000]
 
-fig, axs = plt.subplots(len(Ms), len(sais))
+fig, axs = plt.subplots(len(Ms), len(sais), layout="constrained")
 for i in range(len(Ms)):
     M =Ms[i]
     for j in range(len(sais)):
@@ -104,9 +98,9 @@ for i in range(len(Ms)):
         [w,s,P] = sol.y
         t1 = sol.t
         axs[i, j].plot(t1,w,t1,s,'-.',t1,P,'--')
-        if i == 0:
+        if i < len(Ms)-1:
             axs[i, j].set_xticklabels([])
-        axs[i, j].set_title(f"M = {M}, $s_{{ai}}$ = {sai}")
+        axs[i, j].set_title(f"M = {M}, $s_{{ai}}$ = {sai}, $s_{{P}}$ = {sp}", fontsize=12)
         if j == len(sais)-1:
             plt.legend(["$w_D$","$s_{ID}$","$P$"])
 
@@ -128,5 +122,9 @@ plt.show()
 
 
 #plt.show()
+
+fig.savefig("FP1_Nondim_Stability.pdf")
+fig.savefig("FP1_Nondim_Stability.eps",format='eps')
+fig.savefig("FP1_Nondim_Stability.png")
 
 

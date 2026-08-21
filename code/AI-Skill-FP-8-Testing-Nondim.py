@@ -32,29 +32,10 @@ from scipy.integrate import solve_ivp
 
 
 
-
-
-# amount of work needed to improve skill
-ws = 2
-# make skill (s^*)
-smax = 4
-# work hours in day
-wd = 6
-# Max amount of productivity
-Pmax = 10
-
-# time scale for w
-a = 0.01
 # time scale for s
-b = 0.01
+b = 1
 # time scale for P 
-g = 0.01
-
-
-
-#sai = 1.3*smax
-
-
+g = 1
 
 
 
@@ -88,11 +69,11 @@ def fun(t,y):
 
 
 
-tspan = [0,4000]
+tspan = [0,1000]
 
 
 sp = sps[0]
-fig, axs = plt.subplots(len(Ms), len(wss))
+fig, axs = plt.subplots(len(Ms), len(wss), layout="constrained")
 for i in range(len(Ms)):
     M =Ms[i]
     for j in range(len(wss)):
@@ -100,8 +81,12 @@ for i in range(len(Ms)):
         sol = solve_ivp(fun, tspan, y0, method = 'RK45',atol=1e-10,rtol=1e-8) 
         [w,s,P] = sol.y
         t1 = sol.t
-        axs[i, j].plot(t1,w,t1,s,t1,P)
-        axs[i, j].set_ylim([-0.1,1.1])
+        if i == 0:
+            axs[i, j].set_xticklabels([])
+        axs[i, j].set_title(f"M = {M}, $w_{{s}}$ = {ws}, $s_{{P}}$ = {sp}", fontsize=12)
+        axs[i, j].plot(t1,w,t1,s,'-.',t1,P,'--')
+       
+
 
 
 
@@ -110,7 +95,7 @@ plt.show()
 
 
 sp = sps[1]
-fig2, axs2 = plt.subplots(len(Ms), len(wss))
+fig2, axs2 = plt.subplots(len(Ms), len(wss), layout="constrained")
 for i in range(len(Ms)):
     M =Ms[i]
     for j in range(len(wss)):
@@ -118,9 +103,12 @@ for i in range(len(Ms)):
         sol = solve_ivp(fun, tspan, y0, method = 'RK45',atol=1e-10,rtol=1e-8) 
         [w,s,P] = sol.y
         t1 = sol.t
-        axs2[i, j].plot(t1,w,t1,s,t1,P)
-
-
+        if i == 0:
+            axs2[i, j].set_xticklabels([])
+        axs2[i, j].set_title(f"M = {M}, $w_{{s}}$ = {ws}, $s_{{P}}$ = {sp}", fontsize=12)
+        axs2[i, j].plot(t1,w,t1,s,'-.',t1,P,'--')
+        if j == len(wss)-1:
+            plt.legend(["$w_D$","$s_{ID}$","$P$"]) 
 
 
 #plt.ylabel("Function Values")
@@ -142,4 +130,12 @@ plt.show()
 
 #plt.show()
 
+fig.savefig("FP8_Nondim_Stability_sp_less_smax.pdf")
+fig.savefig("FP8_Nondim_Stability_sp_less_smax.eps",format='eps')
+fig.savefig("FP8_Nondim_Stability_sp_less_smax.png")
+
+
+fig2.savefig("FP8_Nondim_Stability_sp_greater_smax.pdf")
+fig2.savefig("FP8_Nondim_Stability_sp_greater_smax.eps",format='eps')
+fig2.savefig("FP8_Nondim_Stability_sp_greater_smax.png")
 

@@ -81,11 +81,12 @@ tspan = [0,1000]
 
 paramshape= np.shape(param1)
 
-fig, axs = plt.subplots(len(wss), paramshape[0])
+fig, axs = plt.subplots(len(wss), paramshape[0], layout="constrained")
 for i in range(paramshape[0]):
     sai,sp= param1[i]
     for j in range(len(wss)):
         ws =wss[j]
+        print((sp-(1-ws)*sai)-ws )
         w0 = (sai-sp)/(sai-1)
         if w0 > 1 or w0 < 0:
             print("Impossible Initial Condition")
@@ -100,38 +101,17 @@ for i in range(paramshape[0]):
         axs[i, j].plot(t1,w,t1,s,'-.',t1,P,'--')
         if i == 0:
             axs[i, j].set_xticklabels([])
-        axs[i, j].set_title(f"$s_{{ai}}$ = {sai}, $s_{{P}}$ = {sp}, $w_{{s}}$ = {ws}")
+        axs[i, j].set_title(f"$s_{{ai}}$ = {sai}, $s_{{P}}$ = {sp}, $w_{{s}}$ = {ws}", fontsize=12)
+        if j == len(wss)-1:
+            plt.legend(["$w_D$","$s_{ID}$","$P$"])       
 
 
 
 
 
-#fig = plt.figure(figsize=(12, 10))
-#subplots = [fig.add_subplot(2, 2, i + 1, projection='3d') for i in range(4)]
 
 
 
-#for i, ax in enumerate(subplots):
-#    i2 = np.mod(i,2)
-#    j2 = np.mod(i+1,2)
-#    ws =wss[i2]
-#    sai= sais[j2] 
-#    
-#    w0 = wd*(sai-sp)/(sai-smax)
-#    if w0 > wd or w0 < 0:
-#        print("Impossible Initial Condition")
-#        print(w0)
-#    s0 = smax
-#    P0 = M
-#    y0 = [w0, s0, P0]
-#    y0 = y0 +100*np.array([np.random.uniform(0,0.01), -np.random.uniform(0,0.01),np.random.uniform(0,0.01)])
-#    sol = solve_ivp(fun, tspan, y0, method = 'RK45',atol=1e-10,rtol=1e-8) 
-#    [w,s,P] = sol.y
-#    t1 = sol.t
-#    ax.plot(w,s,P,label='Phase Curve')
-#    ax.legend()
-
-
-#plt.tight_layout()
-#plt.show()
-
+fig.savefig("FP10_Nondim_Stability.pdf")
+fig.savefig("FP10_Nondim_Stability.eps",format='eps')
+fig.savefig("FP10_Nondim_Stability.png")

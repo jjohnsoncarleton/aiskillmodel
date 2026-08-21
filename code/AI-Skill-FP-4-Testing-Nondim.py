@@ -44,9 +44,8 @@ from scipy.integrate import solve_ivp
 ws = 0.5
 
 
-
 # time scale for s
-b = 1
+b =1
 # time scale for P 
 g = 1
 
@@ -61,19 +60,17 @@ sp = 1/2
 
 
 # Motivation Array
-#Ms = np.array([0.75,1,1.25])
-#sais = np.array([sp/2,sp,3*sp/2])
-Ms = np.array([0.75,1.25])
-sais = np.array([sp/2,3*sp/2])
+Ms = np.array([0.75,1,1.25])
+sais = np.array([sp/2,sp,3*sp/2])
 
 
 
 # FP 1
 w0 = 0
-s0 = 0
+s0 = 1
 P0 = 1
 y0 = [w0, s0, P0] 
-y0 = y0+np.array([np.random.uniform(0,0.1), np.random.uniform(0,0.1),-np.random.uniform(0,0.1)])
+y0 = y0+np.array([np.random.uniform(0,0.1), -np.random.uniform(0,0.1),-np.random.uniform(0,0.1)])
 
 # function for ODE
 def fun(t,y):
@@ -83,7 +80,7 @@ def fun(t,y):
   return [dwdt, dsdt, dPdt] # return array for dw/dt ds/dt
 
 
-tspan = [0,1000]
+tspan = [0,1500]
 
 fig, axs = plt.subplots(len(Ms), len(sais), layout="constrained")
 for i in range(len(Ms)):
@@ -94,11 +91,13 @@ for i in range(len(Ms)):
         [w,s,P] = sol.y
         t1 = sol.t
         axs[i, j].plot(t1,w,t1,s,'-.',t1,P,'--')
+        axs[i,j].set_ylim(-0.05,1.05)
         if i < len(Ms)-1:
             axs[i, j].set_xticklabels([])
-        axs[i, j].set_title(f"M = {M}, $s_{{ai}}$ = {sai}, $s_{{P}}$ = {sp}", fontsize=12)
+        axs[i, j].set_title(f"M = {M}, $s_{{ai}}$ = {sai}, $s_{{P}}$ = {sp}", fontsize=9)
         if j == len(sais)-1:
             plt.legend(["$w_D$","$s_{ID}$","$P$"])
+        
 
 
 
@@ -123,6 +122,6 @@ plt.show()
 
 
 
-fig.savefig("FP2_Nondim_Stability.pdf")
-fig.savefig("FP2_Nondim_Stability.eps",format='eps')
-fig.savefig("FP2_Nondim_Stability.png")
+fig.savefig("FP4_Nondim_Stability.pdf")
+fig.savefig("FP4_Nondim_Stability.eps",format='eps')
+fig.savefig("FP4_Nondim_Stability.png")

@@ -43,12 +43,11 @@ from scipy.integrate import solve_ivp
 # amount of work needed to improve skill
 ws = 1/2
 
-# time scale for w
-a = 0.01
+
 # time scale for s
-b = 0.01
+b = 1
 # time scale for P 
-g = 0.01
+g = 1
 
 
 
@@ -63,7 +62,7 @@ sp = 1/2
 
 
 # Motivation Array
-Ms = np.array([-0.1,0.1])
+Ms = np.array([-0.25,0.25])
 #sais = np.array([sp/2,3*sp/2])
 wss = [1/2, 3/2]
 
@@ -90,9 +89,9 @@ def fun(t,y):
   return [dwdt, dsdt, dPdt] # return array for dw/dt ds/dt
 
 
-tspan = [0,10000]
+tspan = [0,1000]
 
-fig, axs = plt.subplots(len(Ms), len(wss))
+fig, axs = plt.subplots(len(Ms), len(wss), layout="constrained")
 for i in range(len(Ms)):
     M =Ms[i]
     for j in range(len(wss)):
@@ -100,11 +99,12 @@ for i in range(len(Ms)):
         sol = solve_ivp(fun, tspan, y0, method = 'RK45',atol=1e-10,rtol=1e-8) 
         [w,s,P] = sol.y
         t1 = sol.t
-        axs[i, j].plot(t1,w,t1,s,t1,P)
+        axs[i, j].plot(t1,w,t1,s,'-.',t1,P,'--')
         if i == 0:
             axs[i, j].set_xticklabels([])
-        axs[i, j].set_title(f"M = {M}, $w_{{s}}$ = {ws}")
-    
+        axs[i, j].set_title(f"M = {M}, $w_{{s}}$ = {ws}", fontsize=12)
+        if j == len(wss)-1:
+            plt.legend(["$w_D$","$s_{ID}$","$P$"])       
 
 
 
@@ -127,3 +127,6 @@ plt.show()
 #plt.show()
 
 
+fig.savefig("FP5_Nondim_Stability.pdf")
+fig.savefig("FP5_Nondim_Stability.eps",format='eps')
+fig.savefig("FP5_Nondim_Stability.png")
